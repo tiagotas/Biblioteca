@@ -1,0 +1,16 @@
+#configuracao personalizada do cluster kind
+
+kind: cluster
+apiVersion: kind.x-k8s.io/valpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      #porta do container doker do kind
+      - containerPort: 30080
+        hostPort: 30080
+        protocol: TPC
+        #porta externa mysql
+      - containerPort: 30306
+        #porta acessivel no mysql workbench 
+        hostPort: 30306
+        protocol: TPC

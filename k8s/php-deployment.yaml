@@ -1,0 +1,37 @@
+#deployment da aplicaçao php
+apiVersion: apps/v1
+kind: Deployment
+metdata:
+  name: php
+spec:
+  #uma instancia do app php
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php
+  template:
+    metdata:
+      labels:
+        app: php
+    spec:
+      containers:
+        - name: php
+          # imagem customizada que voce criou 
+          image: tiagotas/biblioteca_php:v1
+          ports:
+            # apache ou php embutido escutando na porta 80
+            - containerPort: 80
+---
+# sevices para expor o app php para fora do cluster (NodePort)
+apiVersion: v1
+kind: Service
+metdata: 
+  name: php
+spec: 
+  type: NodePort # permite acesso via porta do host 
+  ports:
+    - port: 80 # porta dentro do cluster
+      targetPort: 80 # porta do container
+      nodePort: 30080 # porta no host (maopeada via kind)
+  selector:
+    app: php # conecta ao pod pelo php label 

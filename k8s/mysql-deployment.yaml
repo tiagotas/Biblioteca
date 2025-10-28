@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metData:
+  name: mysql-init
+data:
+  init-sql: |
+    CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY 'root';
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+
+    CREATE USER IF NOT EXISTS 'fatec'@'%' IDENTIFIED BY 'senha@fatec';
+    GRANT ALL PRIVILEGES ON db_biblioteca.* TO 'fatec'@'%';
+
+    FLUSH PRIVILEGES;
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metData:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metData:
+      labels: 
+        app: mysql
+    spec:
+      containers: 
+        - name: mysql
+          image: mysql:8.0
+          env: 
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+            - name: MYSQL_DATABASE
+              value: "db_biblioteca"
+          ports:
+            - containerPort: 3306
+          volumeMounts: 
+            - name: mysql-storage 
+              mountPath: /var/lib/mysql
+            #monta o script de init do confgmap na pasta especial do mysql
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d/init.sql
+              subPath: init.sql
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+        - name: init-script
+          configMap:
+            name: mysql-init
+
+---
+
+apiVersion: v1
+kind: Service
+metdata:
+  name: mysql
+space:
+  type: NodePort
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 30306 #porta acessivel: localhost:30306
+      
+---
