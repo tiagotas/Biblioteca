@@ -1,5 +1,5 @@
 Curso completo de MVC com PHP 8.4 usando MySQL com padrão de projetos DAO. O curso tem quase 8 horas de conteúdo e está disponpivel gratuítamente no YouTube, link da playlist abaixo.
-Neste curso são abordadas as novas funcionalidades do PHP 8.4, como Property Hooks e inicialização de objetos anônimos. Além de recursos já conhecidos como Type Hint, nullsafe operator e null coalescing.
+Neste curso são abordadas as novas funcionalidades do PHP 8.4, como Property Hooks e inicialização de objetos anônimos. Além de recursos já conhecidos como Type Hint, nullsafe operator e null coalescing...........................
 
 ## CURTIU MEU TRABALHO?
 Você pode me ajudar com um PIX para tiago@tiago.blog.br 🍻
